@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "TB_USER")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class User implements Serializable {
+public class UserModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

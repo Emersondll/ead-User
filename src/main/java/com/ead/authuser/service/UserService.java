@@ -1,17 +1,22 @@
 package com.ead.authuser.service;
 
-import com.ead.authuser.model.User;
+import com.ead.authuser.model.UserModel;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    User save(final User user);
 
-    List<User> findAll();
+    UserModel save(final UserModel user);
 
-    Optional<User> findById(final UUID id);
+    List<UserModel> findAll();
 
-    void delete(final User response);
+    Optional<UserModel> findById(final UUID id);
+
+    void delete(final UserModel response);
+
+    boolean findByUsername(final String username);
+
+    boolean findByEmail(final String email);
 }

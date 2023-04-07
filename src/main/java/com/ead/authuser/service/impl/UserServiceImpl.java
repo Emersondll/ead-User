@@ -1,6 +1,6 @@
 package com.ead.authuser.service.impl;
 
-import com.ead.authuser.model.User;
+import com.ead.authuser.model.UserModel;
 import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +18,32 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User save(User user) {
-        return null;
+    public UserModel save(final UserModel user) {
+        return repository.save(user);
     }
 
     @Override
-    public List<User> findAll() {
+    public List<UserModel> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<User> findById(UUID id) {
+    public Optional<UserModel> findById(final UUID id) {
         return repository.findById(id);
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(final UserModel user) {
         repository.delete(user);
+    }
+
+    @Override
+    public boolean findByUsername(final String username) {
+        return repository.findByUsername(username);
+    }
+
+    @Override
+    public boolean findByEmail(final String email) {
+        return repository.findByEmail(email);
     }
 }
