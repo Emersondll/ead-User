@@ -64,7 +64,7 @@ O docker compose esta localizado em : "src/main/resources/docker-compose.yml".
 | `id`      | `string`   | **Obrigatório**. O ID do registro |
 
 
-#### Retorna todos registros 
+#### Retorna todos registros
 
 ```http
   GET /
