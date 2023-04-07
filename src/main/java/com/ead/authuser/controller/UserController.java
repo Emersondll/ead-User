@@ -47,6 +47,5 @@ public class UserController {
         service.delete(response.get());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Deleted");
 
-
     }
 }
