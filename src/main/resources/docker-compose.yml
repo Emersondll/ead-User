@@ -1,0 +1,74 @@
+version: "3"
+services:
+#Start Rabbitmq #
+    rabbitmq:
+        image: "rabbitmq:3.8-management-alpine"
+        container_name: rabbitmq
+        hostname: rabbitmq
+        ports:
+            - "15672:15672"
+            - "15671:15671"
+            - "15691:15691"
+            - "15692:15692"
+            - "5672:5672"
+        volumes:
+            - "./rabbitmq_data:/var/lib/rabbitmq/mnesia"
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=admin
+#Start Postgres DB#
+    postgres:
+        image: "postgres:latest"
+        container_name: postgres
+        volumes:
+            - "./postgres-data:/postgres_data/postgres_db"
+        environment:
+            POSTGRES_PASSWORD: "admin"
+        ports:
+            - "5432:5432"            
+#Start Mongo DB#
+    mongodb:
+        image: "mongo:latest"
+        container_name: mongodb
+        ports:
+            - "27017:27017"
+        volumes:
+            - "./mongodb-data:/mongo_data/mongodb"
+            
+#Start Mysql DB#
+# https://dba.stackexchange.com/questions/30768/access-denied-for-user-root
+# mysql -u root -p
+#       SELECT user,host FROM mysql.user;
+#       SELECT USER(),CURRENT_USER();
+#       SHOW GRANTS;
+# SELECT `User`, `Grant_priv` FROM `mysql`.`user`;
+# UPDATE `mysql`.`user` SET `Grant_priv` = 'Y'
+# FLUSH PRIVILEGES;
+# SELECT `User`, `Grant_priv` FROM `mysql`.`user`;
+
+    mysql:
+        image: "mysql:5.7"
+        container_name: mysql
+        environment:
+            MYSQL_DATABASE: 'mysql'
+            # So you don't have to use root, but you can if you like
+            MYSQL_USER: 'admin'
+            # You can use whatever password you like
+            MYSQL_PASSWORD: 'admin'
+            # Password for root access
+            MYSQL_ROOT_PASSWORD: 'admin'
+        ports:
+        # <Port exposed> : <MySQL Port running inside container>
+            - '3306:3306'
+        expose:
+        # Opens port 3306 on the container
+            - '3306'
+        # Where our data will be persisted
+        volumes:
+            - "./mysql-data:/mysql_data/mysqldb"
+           
+
+volumes:
+    mongodb-data: {}
+    postgres-data: {}
+    mysql-data: {}
