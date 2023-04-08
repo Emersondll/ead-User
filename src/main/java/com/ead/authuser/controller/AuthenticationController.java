@@ -24,11 +24,11 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody UserDto userDto) {
-        if (service.findByUsername(userDto.getUsername())) {
+        if (service.existsByUsername(userDto.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is Already Taken!");
         }
 
-        if (service.findByEmail(userDto.getEmail())) {
+        if (service.existsByEmail(userDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
         }
         UserModel userModel = new UserModel();

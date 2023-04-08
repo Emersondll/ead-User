@@ -38,12 +38,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean findByUsername(final String username) {
-        return repository.findByUsername(username);
+    public boolean existsByUsername(final String username) {
+        return repository.existsByUsername(username);
     }
 
     @Override
-    public boolean findByEmail(final String email) {
-        return repository.findByEmail(email);
+    public boolean existsByEmail(final String email) {
+        return repository.existsByEmail(email);
     }
 }
