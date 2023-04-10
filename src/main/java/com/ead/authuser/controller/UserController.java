@@ -1,6 +1,6 @@
 package com.ead.authuser.controller;
 
-import com.ead.authuser.model.User;
+import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
+    public ResponseEntity<List<UserModel>> findAll() {
 
         return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
 
@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/id")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") UUID id) {
 
-        Optional<User> response = service.findById(id);
+        Optional<UserModel> response = service.findById(id);
         return response.<ResponseEntity<Object>>map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found"));
 
@@ -39,14 +39,13 @@ public class UserController {
     @DeleteMapping("/id")
     public ResponseEntity<Object> deleteById(@PathVariable(value = "id") UUID id) {
 
-        Optional<User> response = service.findById(id);
+        Optional<UserModel> response = service.findById(id);
 
         if (response.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
         }
         service.delete(response.get());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Deleted");
-
 
     }
 }
