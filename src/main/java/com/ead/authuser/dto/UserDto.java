@@ -36,7 +36,7 @@ public class UserDto {
     private String username;
 
     @NotBlank(groups = UserView.RegistrationPost.class)
-    @Email
+    @Email // TODO Criar personalizado
     @Size(min = 4, max = 50,groups =UserView.RegistrationPost.class )
     @JsonView(UserView.RegistrationPost.class)
     private String email;
