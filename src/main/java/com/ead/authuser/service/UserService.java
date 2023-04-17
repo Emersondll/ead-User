@@ -3,6 +3,7 @@ package com.ead.authuser.service;
 import com.ead.authuser.model.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,5 +23,5 @@ public interface UserService {
 
     boolean existsByEmail(final String email);
 
-    Page<UserModel> findAll(final Pageable pageable);
+    Page<UserModel> findAll(final Specification<UserModel> spec, final Pageable pageable);
 }
