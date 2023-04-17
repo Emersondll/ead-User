@@ -5,6 +5,10 @@ import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,13 +24,16 @@ import java.util.UUID;
 @RequestMapping("/user")
 public class UserController {
 
+    public static final String USER_NOT_FOUND = "User Not Found";
     @Autowired
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> findAll() {
+    public ResponseEntity<Page<UserModel>> findAll(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC)
+                                                   Pageable pageable) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        Page<UserModel> userModelPage = service.findAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
 
     }
 
@@ -35,7 +41,7 @@ public class UserController {
     public ResponseEntity<Object> findById(@PathVariable(value = "userId") UUID userId) {
         Optional<UserModel> response = service.findById(userId);
         return response.<ResponseEntity<Object>>map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found"));
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND));
 
 
     }
@@ -46,7 +52,7 @@ public class UserController {
         Optional<UserModel> response = service.findById(userId);
 
         if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
         }
         service.delete(response.get());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User Deleted");
@@ -59,7 +65,7 @@ public class UserController {
                                              @JsonView(UserDto.UserView.UserPut.class) UserDto userDto) {
         Optional<UserModel> response = service.findById(userId);
         if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
         }
         UserModel userModel = response.get();
         userModel.setCpf(userDto.getCpf());
@@ -78,7 +84,7 @@ public class UserController {
                                                  @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
         Optional<UserModel> response = service.findById(userId);
         if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
         }
         if (!response.get().getPassword().equals(userDto.getOldPassword())) { // TODO Melhorar validação
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ERROR: Mismatched Password");
@@ -98,7 +104,7 @@ public class UserController {
                                               @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) {
         Optional<UserModel> response = service.findById(userId);
         if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(USER_NOT_FOUND);
         }
 
         UserModel userModel = response.get();
