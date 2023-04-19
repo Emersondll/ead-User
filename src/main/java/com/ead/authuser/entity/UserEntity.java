@@ -1,4 +1,4 @@
-package com.ead.authuser.model;
+package com.ead.authuser.entity;
 
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "TB_USER")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class UserModel extends RepresentationModel<UserModel> implements Serializable {
+public class UserEntity extends RepresentationModel<UserEntity> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id

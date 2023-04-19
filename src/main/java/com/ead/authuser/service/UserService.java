@@ -1,6 +1,8 @@
 package com.ead.authuser.service;
 
-import com.ead.authuser.model.UserModel;
+import com.ead.authuser.dto.UserDto;
+import com.ead.authuser.entity.UserEntity;
+import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,17 +13,23 @@ import java.util.UUID;
 
 public interface UserService {
 
-    UserModel save(final UserModel user);
+    UserEntity save(final UserEntity user);
 
-    List<UserModel> findAll();
+    List<UserEntity> findAll();
 
-    Optional<UserModel> findById(final UUID id);
+    Optional<UserEntity> findById(final UUID id);
 
-    void delete(final UserModel response);
+    void delete(final UserEntity response);
 
     boolean existsByUsername(final String username);
 
     boolean existsByEmail(final String email);
 
-    Page<UserModel> findAll(final Specification<UserModel> spec, final Pageable pageable);
+    Page<UserEntity> findAll(final Specification<UserEntity> spec, final Pageable pageable);
+
+    void deleteById(final UUID userId) throws NotFoundException;
+
+    Optional<UserEntity> updateById(final UUID userId, final UserDto userDto) throws NotFoundException;
+
+    void updatePassword(final UUID userId, final UserDto userDto) throws NotFoundException;
 }

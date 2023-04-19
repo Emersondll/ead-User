@@ -1,9 +1,9 @@
 package com.ead.authuser.controller;
 
 import com.ead.authuser.dto.UserDto;
+import com.ead.authuser.entity.UserEntity;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
-import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
@@ -34,14 +34,14 @@ public class AuthenticationController {
         if (service.existsByEmail(userDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
         }
-        UserModel userModel = new UserModel();
-        BeanUtils.copyProperties(userDto, userModel);
-        userModel.setUserStatus(UserStatus.ACTIVE);
-        userModel.setUserType(UserType.STUDENT);
-        userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
-        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        service.save(userModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userDto, userEntity);
+        userEntity.setUserStatus(UserStatus.ACTIVE);
+        userEntity.setUserType(UserType.STUDENT);
+        userEntity.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        service.save(userEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
 
 
     }
