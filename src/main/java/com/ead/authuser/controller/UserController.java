@@ -18,9 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,13 +29,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserController {
 
 
+    private final UserService service;
+
     @Autowired
-    private UserService service;
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<Page<UserEntity>> findAll(SpecificationTemplate.UserSpec spec,
                                                     @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC)
-                                                    Pageable pageable) {
+                                                    Pageable pageable) throws NotFoundException {
 
         Page<UserEntity> userEntities = service.findAll(spec, pageable);
 
@@ -54,12 +55,8 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> findById(@PathVariable(value = "userId") UUID userId) {
-        Optional<UserEntity> response = service.findById(userId);
-        return response.<ResponseEntity<Object>>map(user -> ResponseEntity.status(HttpStatus.OK).body(user))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(GeneralMessage.USER_NOT_FOUND));
-
-
+    public ResponseEntity<Object> findById(@PathVariable(value = "userId") UUID userId) throws NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findUserById(userId));
     }
 
     @DeleteMapping("/{userId}")
@@ -76,7 +73,6 @@ public class UserController {
                                              @JsonView(UserDto.UserView.UserPut.class) UserDto userDto) throws NotFoundException {
 
         return ResponseEntity.status(HttpStatus.OK).body(service.updateById(userId, userDto));
-
     }
 
     @PutMapping("/{userId}/password")
@@ -85,24 +81,13 @@ public class UserController {
                                                  @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) throws NotFoundException {
         service.updatePassword(userId, userDto);
         return ResponseEntity.status(HttpStatus.OK).body(new JsonMessageProperties(GeneralMessage.UPDATE_PASSWORD_SUCCESS, HttpStatus.OK));
-
     }
 
     @PutMapping("/{userId}/image")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
                                               @RequestBody @Validated(UserDto.UserView.ImagePut.class)
-                                              @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) {
-        Optional<UserEntity> response = service.findById(userId);
-        if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(GeneralMessage.USER_NOT_FOUND);
-        }
+                                              @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) throws NotFoundException {
 
-        UserEntity userEntity = response.get();
-        userEntity.setImageUrl(userDto.getImageUrl());
-        userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        service.save(userEntity);
-
-        return ResponseEntity.status(HttpStatus.OK).body(userEntity);
-
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateImage(userId, userDto));
     }
 }

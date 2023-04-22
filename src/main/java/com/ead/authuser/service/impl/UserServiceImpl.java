@@ -6,6 +6,7 @@ import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
 import com.ead.authuser.utils.GeneralMessage;
 import javassist.NotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +22,13 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository repository;
 
+    private final UserRepository repository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public UserEntity save(final UserEntity user) {
@@ -63,47 +68,76 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(final UUID userId) throws NotFoundException {
 
-        Optional<UserEntity> response = findById(userId);
-
-        if (response.isEmpty()) {
-
-            throw new NotFoundException(GeneralMessage.USER_NOT_FOUND);
-        }
-        delete(response.get());
+        findById(userId)
+                .map(userEntity -> {
+                    delete(userEntity);
+                    return userEntity;
+                })
+                .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
 
     }
 
     @Override
     public Optional<UserEntity> updateById(final UUID userId, final UserDto userDto) throws NotFoundException {
-        Optional<UserEntity> response = findById(userId);
-        if (response.isEmpty()) {
-            throw new NotFoundException(GeneralMessage.USER_NOT_FOUND);
-        }
-        UserEntity userEntity = response.get();
-        userEntity.setCpf(userDto.getCpf());
-        userEntity.setFullName(userDto.getFullName());
-        userEntity.setPhoneNumber(userDto.getPhoneNumber());
-        userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        save(userEntity);
-        return Optional.of(userEntity);
+        UserEntity entity = findById(userId)
+                .map(userEntity -> {
+                    userEntity.setCpf(userDto.getCpf());
+                    userEntity.setFullName(userDto.getFullName());
+                    userEntity.setPhoneNumber(userDto.getPhoneNumber());
+                    userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+                    save(userEntity);
+                    return userEntity;
+                })
+                .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
+
+        return Optional.of(entity);
     }
 
     @Override
     public void updatePassword(UUID userId, UserDto userDto) throws NotFoundException {
 
-        Optional<UserEntity> response = findById(userId);
-        if (response.isEmpty()) {
+        Optional<UserEntity> entity = findById(userId);
+        validatedPasswordPolices(userDto, entity);
+        entity.get().setPassword(userDto.getPassword());
+        entity.get().setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        save(entity.get());
+    }
+
+    private static void validatedPasswordPolices(UserDto userDto, Optional<UserEntity> entity) throws NotFoundException {
+        if (entity.isEmpty()) {
             throw new NotFoundException(GeneralMessage.USER_NOT_FOUND);
         }
-        if (!response.get().getPassword().equals(userDto.getOldPassword())) {
+        if (!entity.get().getPassword().equals(userDto.getOldPassword())) {
             throw new SecurityException(GeneralMessage.UPDATE_PASSWORD_ERROR);
         }
-        if (response.get().getPassword().equals(userDto.getPassword())) {
+        if (entity.get().getPassword().equals(userDto.getPassword())) {
             throw new SecurityException(GeneralMessage.UPDATE_PASSWORD_ERROR_WITH_SAME_VALUES);
         }
-        UserEntity userEntity = response.get();
-        userEntity.setPassword(userDto.getPassword());
-        userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        save(userEntity);
+    }
+
+    @Override
+    public Optional<UserEntity> updateImage(final UUID userId, final UserDto userDto) throws NotFoundException {
+        UserEntity response = findById(userId)
+                .map(userEntity -> {
+                    userEntity.setImageUrl(userDto.getImageUrl());
+                    userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+                    save(userEntity);
+                    return userEntity;
+                })
+                .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
+
+        return Optional.of(response);
+    }
+
+    @Override
+    public UserDto findUserById(final UUID userId) throws NotFoundException {
+        return findById(userId)
+                .map(userEntity -> {
+                    UserDto dto = new UserDto();
+                    BeanUtils.copyProperties(userEntity, dto);
+                    return dto;
+                })
+                .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
+
     }
 }

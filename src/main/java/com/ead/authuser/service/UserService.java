@@ -32,4 +32,8 @@ public interface UserService {
     Optional<UserEntity> updateById(final UUID userId, final UserDto userDto) throws NotFoundException;
 
     void updatePassword(final UUID userId, final UserDto userDto) throws NotFoundException;
+
+    Optional<UserEntity> updateImage(final UUID userId,final UserDto userDto) throws NotFoundException;
+
+    UserDto findUserById(final UUID userId) throws NotFoundException;
 }
