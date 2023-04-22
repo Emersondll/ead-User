@@ -2,6 +2,7 @@ package com.ead.authuser.service;
 
 import com.ead.authuser.dto.UserDto;
 import com.ead.authuser.entity.UserEntity;
+import com.ead.authuser.specification.SpecificationTemplate;
 import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    UserEntity save(final UserEntity user);
+    void save(final UserEntity user);
 
     List<UserEntity> findAll();
 
@@ -29,11 +30,13 @@ public interface UserService {
 
     void deleteById(final UUID userId) throws NotFoundException;
 
-    Optional<UserEntity> updateById(final UUID userId, final UserDto userDto) throws NotFoundException;
+    UserDto updateById(final UUID userId, final UserDto userDto) throws NotFoundException;
 
     void updatePassword(final UUID userId, final UserDto userDto) throws NotFoundException;
 
-    Optional<UserEntity> updateImage(final UUID userId,final UserDto userDto) throws NotFoundException;
+    UserDto updateImage(final UUID userId, final UserDto userDto) throws NotFoundException;
 
     UserDto findUserById(final UUID userId) throws NotFoundException;
+
+    Page<UserDto> findAllUsers(final SpecificationTemplate.UserSpec spec, final Pageable pageable) throws NotFoundException;
 }

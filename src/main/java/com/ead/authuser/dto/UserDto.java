@@ -1,9 +1,11 @@
 package com.ead.authuser.dto;
 
+import com.ead.authuser.entity.UserEntity;
 import com.ead.authuser.validation.UsernameConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +14,7 @@ import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDto {
+public class UserDto extends RepresentationModel<UserDto> {
 
     private UUID id;
     @NotBlank(groups = UserView.RegistrationPost.class)

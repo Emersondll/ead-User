@@ -15,6 +15,7 @@
     <description>Project AuthUser</description>
     <properties>
         <java.version>11</java.version>
+        <org.mapstruct.version>1.5.4.Final</org.mapstruct.version>
     </properties>
     <dependencies>
         <dependency>
@@ -70,6 +71,17 @@
             <version>3.0.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+
 
 
         <dependency>
@@ -85,6 +97,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

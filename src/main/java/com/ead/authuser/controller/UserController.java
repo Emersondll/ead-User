@@ -1,7 +1,6 @@
 package com.ead.authuser.controller;
 
 import com.ead.authuser.dto.UserDto;
-import com.ead.authuser.entity.UserEntity;
 import com.ead.authuser.service.UserService;
 import com.ead.authuser.specification.SpecificationTemplate;
 import com.ead.authuser.utils.GeneralMessage;
@@ -37,20 +36,20 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserEntity>> findAll(SpecificationTemplate.UserSpec spec,
-                                                    @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC)
-                                                    Pageable pageable) throws NotFoundException {
+    public ResponseEntity<Page<UserDto>> findAll(SpecificationTemplate.UserSpec spec,
+                                                 @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC)
+                                                 Pageable pageable) throws NotFoundException {
 
-        Page<UserEntity> userEntities = service.findAll(spec, pageable);
+        Page<UserDto> userDtos = service.findAllUsers(spec, pageable);
 
-        if (!userEntities.isEmpty()) {
-            for (UserEntity user : userEntities.toList()) {
+        if (!userDtos.isEmpty()) {
+            for (UserDto user : userDtos.toList()) {
 
-                user.add(linkTo(methodOn(UserController.class).findById(user.getUserId())).withSelfRel());
+                user.add(linkTo(methodOn(UserController.class).findById(user.getId())).withSelfRel());
             }
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(userEntities);
+        return ResponseEntity.status(HttpStatus.OK).body(userDtos);
 
     }
 

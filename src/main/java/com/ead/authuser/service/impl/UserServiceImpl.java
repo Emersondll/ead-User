@@ -2,8 +2,10 @@ package com.ead.authuser.service.impl;
 
 import com.ead.authuser.dto.UserDto;
 import com.ead.authuser.entity.UserEntity;
+import com.ead.authuser.mapper.UserMapper;
 import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
+import com.ead.authuser.specification.SpecificationTemplate;
 import com.ead.authuser.utils.GeneralMessage;
 import javassist.NotFoundException;
 import org.springframework.beans.BeanUtils;
@@ -19,20 +21,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @Service
 public class UserServiceImpl implements UserService {
 
 
     private final UserRepository repository;
+    private UserMapper mapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl( UserRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public UserEntity save(final UserEntity user) {
-        return repository.save(user);
+    public void save(final UserEntity user) {
+        repository.save(user);
     }
 
     @Override
@@ -78,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> updateById(final UUID userId, final UserDto userDto) throws NotFoundException {
+    public UserDto updateById(final UUID userId, final UserDto userDto) throws NotFoundException {
         UserEntity entity = findById(userId)
                 .map(userEntity -> {
                     userEntity.setCpf(userDto.getCpf());
@@ -90,7 +94,9 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
 
-        return Optional.of(entity);
+        UserDto dto = new UserDto();
+        BeanUtils.copyProperties(entity, dto);
+        return dto;
     }
 
     @Override
@@ -116,8 +122,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> updateImage(final UUID userId, final UserDto userDto) throws NotFoundException {
-        UserEntity response = findById(userId)
+    public UserDto updateImage(final UUID userId, final UserDto userDto) throws NotFoundException {
+        UserEntity entity = findById(userId)
                 .map(userEntity -> {
                     userEntity.setImageUrl(userDto.getImageUrl());
                     userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -126,7 +132,10 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
 
-        return Optional.of(response);
+        UserDto dto = new UserDto();
+        BeanUtils.copyProperties(entity, dto);
+        return dto;
+
     }
 
     @Override
@@ -138,6 +147,18 @@ public class UserServiceImpl implements UserService {
                     return dto;
                 })
                 .orElseThrow(() -> new NotFoundException(GeneralMessage.USER_NOT_FOUND));
+
+    }
+
+    @Override
+    public Page<UserDto> findAllUsers(SpecificationTemplate.UserSpec spec, Pageable pageable) throws NotFoundException {
+        Page<UserEntity> userEntities = findAll(spec, pageable);
+        if(userEntities.isEmpty()){
+            throw new NotFoundException(GeneralMessage.USERS_NOT_FOUND);
+        }
+
+        return UserMapper.INSTANCE.converterPageEntityToPageDto(userEntities);
+
 
     }
 }
