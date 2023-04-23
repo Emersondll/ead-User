@@ -33,6 +33,7 @@ public class UserDto extends RepresentationModel<UserDto> {
     @JsonView({UserView.RegistrationPost.class, UserView.PasswordPut.class})
     @Size(min = 6, max = 20, groups = {UserView.RegistrationPost.class, UserView.PasswordPut.class})
     private String password;
+
     @NotBlank(groups = UserView.PasswordPut.class)
     @JsonView(UserView.PasswordPut.class)
     @Size(min = 6, max = 20, groups = UserView.PasswordPut.class)

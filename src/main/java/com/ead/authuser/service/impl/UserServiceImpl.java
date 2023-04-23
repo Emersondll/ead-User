@@ -4,7 +4,6 @@ import com.ead.authuser.dto.UserDto;
 import com.ead.authuser.entity.UserEntity;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
-import com.ead.authuser.mapper.UserMapper;
 import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
 import com.ead.authuser.specification.SpecificationTemplate;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository repository;
-    private UserMapper mapper;
 
     @Autowired
     public UserServiceImpl( UserRepository repository) {
@@ -159,8 +158,31 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException(GeneralMessage.USERS_NOT_FOUND);
         }
 
-        return UserMapper.INSTANCE.converterPageEntityToPageDto(userEntities);
+        return converterPageEntityToPageDto(userEntities);
 
+    }
+
+     private Page<UserDto> converterPageEntityToPageDto(final Page<UserEntity> userEntities) {
+        return userEntities.map(this::converterEntityToDto);
+    }
+
+    private UserDto converterEntityToDto(UserEntity userEntities) {
+        if (ObjectUtils.isEmpty(userEntities) ) {
+            return null;
+        }
+
+        UserDto userDto = new UserDto();
+
+        userDto.setId( userEntities.getUserId() );
+        userDto.setUsername( userEntities.getUsername() );
+        userDto.setEmail( userEntities.getEmail() );
+        userDto.setPassword( userEntities.getPassword() );
+        userDto.setFullName( userEntities.getFullName() );
+        userDto.setPhoneNumber( userEntities.getPhoneNumber() );
+        userDto.setCpf( userEntities.getCpf() );
+        userDto.setImageUrl( userEntities.getImageUrl() );
+
+        return userDto;
     }
 
     @Override
