@@ -10,4 +10,6 @@ public class GeneralMessage {
     public final String UPDATE_PASSWORD_SUCCESS = "Password Updated Successfully";
     public final String UPDATE_PASSWORD_ERROR = "Mismatched Password";
     public final String UPDATE_PASSWORD_ERROR_WITH_SAME_VALUES = "Password Can't Be The Same";
+    public final String USERNAME_ALREADY ="Username is Already Taken!";
+    public final String EMAIL_ALREADY ="Email is Already Taken!";
 }

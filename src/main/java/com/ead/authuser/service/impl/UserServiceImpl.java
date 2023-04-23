@@ -2,6 +2,8 @@ package com.ead.authuser.service.impl;
 
 import com.ead.authuser.dto.UserDto;
 import com.ead.authuser.entity.UserEntity;
+import com.ead.authuser.enums.UserStatus;
+import com.ead.authuser.enums.UserType;
 import com.ead.authuser.mapper.UserMapper;
 import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
@@ -159,6 +161,29 @@ public class UserServiceImpl implements UserService {
 
         return UserMapper.INSTANCE.converterPageEntityToPageDto(userEntities);
 
+    }
 
+    @Override
+    public UserDto registerUser(UserDto userDto) throws NotFoundException {
+        if (existsByUsername(userDto.getUsername())) {
+            throw new SecurityException(GeneralMessage.USERNAME_ALREADY);
+        }
+
+        if (existsByEmail(userDto.getEmail())) {
+            throw new SecurityException(GeneralMessage.EMAIL_ALREADY);
+        }
+        return convertAndSave(userDto);
+    }
+
+    private UserDto convertAndSave(UserDto userDto) {
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userDto, userEntity);
+        userEntity.setUserStatus(UserStatus.ACTIVE);
+        userEntity.setUserType(UserType.STUDENT);
+        userEntity.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        save(userEntity);
+        BeanUtils.copyProperties(userEntity, userDto);
+        return userDto;
     }
 }

@@ -39,4 +39,6 @@ public interface UserService {
     UserDto findUserById(final UUID userId) throws NotFoundException;
 
     Page<UserDto> findAllUsers(final SpecificationTemplate.UserSpec spec, final Pageable pageable) throws NotFoundException;
+
+    UserDto registerUser(final UserDto userDto) throws NotFoundException;
 }
