@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
@@ -41,7 +42,7 @@ public class UserEntity extends RepresentationModel<UserEntity> implements Seria
     @Column(length = 20)
     private String phoneNumber;
     @Column(length = 20)
-    private String cpf;
+    private String documentNumber;
     @Column
     private String imageUrl;
     @Column(nullable = false)

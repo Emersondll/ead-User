@@ -1,6 +1,5 @@
 package com.ead.authuser.dto;
 
-import com.ead.authuser.entity.UserEntity;
 import com.ead.authuser.validation.UsernameConstraint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -46,7 +45,7 @@ public class UserDto extends RepresentationModel<UserDto> {
     private String phoneNumber;
 
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
-    private String cpf;
+    private String documentNumber;
 
     @NotBlank(groups = UserView.ImagePut.class)
     @JsonView({UserView.ImagePut.class})

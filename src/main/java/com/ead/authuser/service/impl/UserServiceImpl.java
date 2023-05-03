@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateById(final UUID userId, final UserDto userDto) throws NotFoundException {
         UserEntity entity = findById(userId)
                 .map(userEntity -> {
-                    userEntity.setCpf(userDto.getCpf());
+                    userEntity.setDocumentNumber(userDto.getDocumentNumber());
                     userEntity.setFullName(userDto.getFullName());
                     userEntity.setPhoneNumber(userDto.getPhoneNumber());
                     userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
         userDto.setPassword( userEntities.getPassword() );
         userDto.setFullName( userEntities.getFullName() );
         userDto.setPhoneNumber( userEntities.getPhoneNumber() );
-        userDto.setCpf( userEntities.getCpf() );
+        userDto.setDocumentNumber( userEntities.getDocumentNumber() );
         userDto.setImageUrl( userEntities.getImageUrl() );
 
         return userDto;
@@ -205,7 +205,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userEntity.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         save(userEntity);
-        BeanUtils.copyProperties(userEntity, userDto);
+        userDto.setId(userEntity.getUserId());
         return userDto;
     }
 }
