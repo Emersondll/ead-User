@@ -1,25 +1,24 @@
+# Decoder authUser project
 
-# Projeto Decoder authUser
-
-O projeto é baseado no Projeto decoder, onde inicialmente será aplicado a as intruções do curso, porém posteriormente será feito refatoração do código para outra estrutura de pastas ou banco de dados.
+The project is based on the decoder Project, which will initially be applied to the course instructions, but later the code will be refactored for another structure of folders or database.
 
 ## Deploy
 
-Para fazer o deploy e necessario possuir  as seguintes ferramentas:
+To deploy it is necessary to have the following tools:
 
 ```
-  Docker
-  Intelij com Java 11
-  Robot 3t
-  DBeaver
+   docker
+   Intelij with Java 11
+   robot 3t
+   DBeaver
   
 ```
-O docker compose esta localizado em : "src/main/resources/docker-compose.yml".
+Docker compose is located at: "src/main/resources/docker-compose.yml".
 
-## Demonstração
+## Demonstration
 
 <p align="center">
-  <img title="#Demo" src="src/main/resources/gif/Demo.gif" width="800px">
+  <img title="#Demo" src="src/main/resources/gif/giphy.gif" width="800px">
 </p>
 
 ## Client URL
@@ -29,9 +28,9 @@ localhost:8087
 
 ```
 
-## Documentação da API
+## API documentation
 
-#### Criaçao de novo registro
+#### Creating a new record
 
 ```
 curl --request POST \
@@ -49,12 +48,12 @@ curl --request POST \
 }'
 ```
 
-| Parâmetro         | Tipo          | Descrição                           |
-| :----------       | :---------    | :---------------------------------- |
-| `id`      | `string`   | **Obrigatório**. O ID do registro |
+| Parameter    | Type     | Description                        |
+|:-------------|:---------| :--------------------------------- |
+| `id`         | `string` | **Mandatory**. The registration ID |
 
 
-#### Retorna o registro utilizando pelo ID
+#### Returns the record using by ID
 
 ```
 curl --request GET \
@@ -62,12 +61,12 @@ curl --request GET \
   --cookie JSESSIONID=1445158BB71F05CDF725CAC00DF41905
 ```
 
-| Parâmetro | Tipo       | Descrição                         |
-|:----------| :--------- |:----------------------------------|
-| `id`      | `string`   | **Obrigatório**. O ID do registro |
+| Parameter    | Type     | Description                        |
+|:-------------|:---------| :--------------------------------- |
+| `id`         | `string` | **Mandatory**. The registration ID |
 
 
-#### Retorna todos registros
+#### Returns all records
 
 ```
   curl --request GET \
@@ -75,12 +74,13 @@ curl --request GET \
   --cookie JSESSIONID=1445158BB71F05CDF725CAC00DF41905
 ```
 
-| Parâmetro   | Tipo       | Descrição                                   |
-| :---------- | :--------- | :------------------------------------------ |
+| Parameter    | Type     | Description                        |
+|:-------------|:---------| :--------------------------------- |
+| `id`         | `string` | **Mandatory**. The registration ID |
 
 
 
-#### Excluir registro baseado em ID
+#### Delete record based on ID
 
 ```
   curl --request DELETE \
@@ -88,11 +88,11 @@ curl --request GET \
   --cookie JSESSIONID=1445158BB71F05CDF725CAC00DF41905
 ```
 
-| Parâmetro | Tipo       | Descrição                          |
-|:----------| :--------- | :--------------------------------- |
-| `id`      | `string`   | **Obrigatório**. O ID do registro |
+| Parameter    | Type     | Description                        |
+|:-------------|:---------|:-----------------------------------|
+| `id`         | `string` | **Mandatory**. The registration ID |
 
-#### Updates registro baseado 
+#### Registry based updates
 
 ```
 curl --request PUT \
@@ -132,18 +132,18 @@ curl --request PUT \
 	}'	
 ```
 
-| Parâmetro | Tipo       | Descrição                          |
-|:----------| :--------- | :--------------------------------- |
-| `id`      | `string`   | **Obrigatório**. O ID do registro |
+| Parameter    | Type     | Description                        |
+|:-------------|:---------|:-----------------------------------|
+| `id`         | `string` | **Mandatory**. The registration ID |
 
 
 
-## Stack utilizada
+## Stack used
 
 **Back-end:** Java, Docker
 
 
-## Autores
+## Authors
 
 - [@Emersondll](https://emersondll.github.io)
 
