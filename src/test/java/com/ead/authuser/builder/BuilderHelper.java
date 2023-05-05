@@ -21,6 +21,7 @@ public class BuilderHelper {
         entity.setUserType(UserType.STUDENT);
         entity.setPhoneNumber("123");
         entity.setDocumentNumber("999999");
+        entity.setPassword("PassWord");
         return entity;
     }
 
@@ -32,6 +33,8 @@ public class BuilderHelper {
           dto.setFullName("Emerson Lima2");
           dto.setPhoneNumber("123");
           dto.setDocumentNumber("999999");
+          dto.setPassword("New PassWord");
+          dto.setOldPassword("PassWord");
           return dto;
      }
 }
