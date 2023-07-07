@@ -36,12 +36,17 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserModel>> findAll(SpecificationTemplate.UserSpec spec,
                                                    @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC)
-                                                   Pageable pageable) {
+                                                   Pageable pageable, @RequestParam(required = false) UUID courseId) {
 
-        Page<UserModel> userModelPage = service.findAll(spec, pageable);
+        Page<UserModel> userModelPage = null;
+        if (Objects.nonNull(courseId) ) {
+            userModelPage = service.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
+        } else {
+            userModelPage = service.findAll(spec, pageable);
+        }
 
-        if(!userModelPage.isEmpty()){
-            for (UserModel user :userModelPage.toList() ){
+        if (!userModelPage.isEmpty()) {
+            for (UserModel user : userModelPage.toList()) {
 
                 user.add(linkTo(methodOn(UserController.class).findById(user.getUserId())).withSelfRel());
             }
