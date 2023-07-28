@@ -12,7 +12,6 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
