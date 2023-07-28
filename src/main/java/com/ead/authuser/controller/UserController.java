@@ -39,7 +39,7 @@ public class UserController {
                                                    Pageable pageable, @RequestParam(required = false) UUID courseId) {
 
         Page<UserModel> userModelPage = null;
-        if (Objects.nonNull(courseId) ) {
+        if (Objects.nonNull(courseId)) {
             userModelPage = service.findAll(SpecificationTemplate.userCourseId(courseId).and(spec), pageable);
         } else {
             userModelPage = service.findAll(spec, pageable);
