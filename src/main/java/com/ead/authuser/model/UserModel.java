@@ -58,4 +58,8 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private Set<UserCourseModel> userCourses;
 
 
+    public UserCourseModel convertToUserCourseModel(UUID courseId) {
+        return new UserCourseModel(null, this, courseId);
+    }
+
 }
