@@ -15,3 +15,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+ead:
+  api:
+    uri:
+      course: 'http://localhost:8082'
